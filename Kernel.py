@@ -1,5 +1,5 @@
 # Building dependences
-from os import system, chdir, getcwd
+from os import system, chdir, getcwd, listdir
 from time import sleep as wait
 import socket
 
@@ -17,7 +17,7 @@ class Kernel:
         self.__version__ = "1.0"
         self.__license__ = "Apache License 2.0"
         self.SubVersion = "version 1.0"
-        self.CompileProgramFramework = 'pyinstaller --noconfirm --onefile --console --icon "C:/Users/eplim/Tenaya/os/usr/bin/text_x_python_24589.ico" --name "Kernel.exe"  "C:/Users/eplim/TardisOS/kernel.py"'
+        self.CompileProgramFramework = 'pyinstaller --noconfirm --onefile --console --icon "C:/Users/eplim/Tenaya/os/usr/bin/text_x_python_24589.ico" --name "Kernel.exe"  "C:/Users/eplim/TardisProject/kernel.py"'
             
         self.consoleApplication()
     def InputShellCommand(self):
@@ -27,6 +27,8 @@ class Kernel:
 
     def ProgramFinish(self):
         exit()
+    def clear(self):
+        system("cls")
     def tty(self):
         self.echo("{}:/dev/cons0".format(org))
         return 0
@@ -81,11 +83,12 @@ class Kernel:
         print("cat [filename]               connect [host]:[port]")
         print("hostname                     ifconfig")
         print("echo [String to print]       pwd")
-        print("version")
+        print("version                      ls   (Objects and Files)")
 
 
     def consoleApplication(self):
         while True:
+            system('title Tardis Shell')
             try:
                 cmd = self.InputShellCommand()  
                 try:
@@ -102,7 +105,10 @@ class Kernel:
                     elif cmd.startswith("echo"):
                         cmd = cmd.replace("echo ", "")
                         cmd = cmd.replace("echo", "")
-                        self.echo(cmd)
+                        if cmd == "":
+                            print("")
+                        else:
+                            print(cmd)
                     elif cmd.startswith("cd"):
                         cmd = cmd.replace("cd ", "")
                         cmd = cmd.replace("cd", "")
@@ -145,9 +151,17 @@ class Kernel:
                     elif cmd == "version":
                         print(self.__version__)
                         print(self.SubVersion)
+                    elif cmd == "ls":
+                        objects = listdir()
+                        for i in objects:
+                            print(i)
+                    elif cmd == "clear":
+                        self.clear()
+
+
 
                     else:
-                        print("Shell: {}: Unknow Command!")
+                        print("Shell: {}: Unknow Command!".format(cmd))
                 else:
                     system("{}.exe".format(cmd))
             except KeyboardInterrupt:

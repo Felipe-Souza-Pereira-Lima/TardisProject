@@ -12,6 +12,8 @@ hostname = socket.gethostname()
 host = socket.gethostbyname(hostname)
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
+# Functions
+
 class Kernel:
     def __init__(self):
         self.__version__ = "1.0"
@@ -78,12 +80,14 @@ class Kernel:
     def PrintPath(self):
         print(getcwd())
         return 0
+    
     def getHelpCommand(self):
-        print("shutdown                     tty")
-        print("cat [filename]               connect [host]:[port]")
-        print("hostname                     ifconfig")
-        print("echo [String to print]       pwd")
-        print("version                      ls   (Objects and Files)")
+        print(r"shutdown                     tty")
+        print(r"cat [filename]               connect [host]:[port]")
+        print(r"hostname                     ifconfig")
+        print(r"echo [String to print]       pwd")
+        print(r"version                      ls   (Objects and Files)")
+        print(r"print [(path)\filename]")
 
 
     def consoleApplication(self):
@@ -138,6 +142,23 @@ class Kernel:
                                     except KeyboardInterrupt:
                                         print("Shell: Connection closed!")
                                         break
+                    elif cmd.startswith("print"):
+                        cmd = cmd.replace("print ", "")
+                        cmd = cmd.replace("print", "")
+                        try:
+                            a = open(cmd, "rt")
+                            a.close()
+                        except FileNotFoundError:
+                            print("Shell: {}: FileNotFoundError".format(cmd))
+                        else:
+                            with open(cmd, "rt") as println_file:
+                                println_content = println_file.read()
+                                system(fr"print {cmd}")
+                    elif cmd.startswith("ping"):
+                        system(cmd) 
+                    elif cmd.startswith("apt"):
+                        Package(cmd) 
+
                     elif cmd == "hostname":
                         self.PrintHostName()
                     elif cmd == "ifconfig":                   
@@ -157,7 +178,7 @@ class Kernel:
                             print(i)
                     elif cmd == "clear":
                         self.clear()
-
+                    
 
 
                     else:
